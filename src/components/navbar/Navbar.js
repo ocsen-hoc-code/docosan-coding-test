@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateList } from '../../reducers/Doctor/doctorReducer'
+import { setDoctors } from '../../reducers/Doctor/doctorReducer'
 import dataList from '../../data/dataList'
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const [order, setOrder] = useState({ value: 'distance', text: 'Khoảng cách' });
     const [language, setLanguage] = useState({ value: null, text: 'Ngôn ngữ' });
-
+   
     const doctorFilter = (orderValue, languageValue) => {
-        let doctors = dataList;
-        console.log(orderValue);
-        console.log(languageValue);
+        let doctors = [...dataList];
         console.log(doctors);
         doctors.sort((a, b) => {
             if ('distance' == orderValue) {
@@ -19,7 +17,7 @@ const Navbar = () => {
             }
             return b[orderValue] - a[orderValue];
         });
-
+        
         if (null !== languageValue) {
             doctors = doctors.filter((doctor) => {
                 if (Array.isArray(doctor.language)) {
@@ -30,29 +28,27 @@ const Navbar = () => {
             })
         }
         console.log(doctors);
-        // dispatch(updateList(doctors));
-    }
-
-    const clearLanguage = () => {
-        setLanguage({ value: null, text: 'Ngôn ngữ' });
-        setTimeout(() => {
-            doctorFilter(order.value, null);
-        }, 500);
+        dispatch(setDoctors(doctors));
     }
 
     const updateOrder = (value, text) => {
         setOrder({ value, text });
-        setTimeout(() => {
-            doctorFilter(value, language.value);
-        }, 500);
+        doctorFilter(value, language.value);
+    }
+
+    const clearLanguage = () => {
+        setLanguage({ value: null, text: 'Ngôn ngữ' });
+        doctorFilter(order.value, null);
     }
 
     const updateLanguage = (value, text) => {
         setLanguage({ value, text });
-        setTimeout(() => {
-            doctorFilter(order.value, value);
-        }, 500);
+        doctorFilter(order.value, value);
     }
+
+    useEffect(() => {
+        doctorFilter("distance", language.value);
+    }, []);
 
     return (
         <div>

@@ -5,8 +5,6 @@ import Doctor from '../doctor/Doctor';
 
 const Doctors = () => {
     const doctorsList = useSelector(doctors);
-    const dispatch = useDispatch();
-
     return (
         <div>
             {doctorsList.map(doctor => {

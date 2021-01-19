@@ -6,15 +6,13 @@ export const doctorReducer = createSlice({
     list: dataList,
   },
   reducers: {
-    updateList: (state, action) => {
-      console.log('state');
-      console.log(state);
+    setDoctors: (state, action) => {
       state.list = action.payload;
     },
   },
 });
 
-export const { updateList } = doctorReducer.actions;
+export const { setDoctors } = doctorReducer.actions;
 
 export const doctors = state => state.doctors.list;
 
