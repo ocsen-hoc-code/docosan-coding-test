@@ -1,30 +1,57 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateList, doctors } from '../../reducers/Doctor/doctorReducer'
+import { updateList } from '../../reducers/Doctor/doctorReducer'
+import dataList from '../../data/dataList'
 
 const Navbar = () => {
     const dispatch = useDispatch();
     const [order, setOrder] = useState({ value: 'distance', text: 'Khoảng cách' });
     const [language, setLanguage] = useState({ value: null, text: 'Ngôn ngữ' });
 
-    const doctorFilter = () => {
-        
+    const doctorFilter = (orderValue, languageValue) => {
+        let doctors = dataList;
+        console.log(orderValue);
+        console.log(languageValue);
+        console.log(doctors);
+        doctors.sort((a, b) => {
+            if ('distance' == orderValue) {
+                return a[orderValue] - b[orderValue];
+            }
+            return b[orderValue] - a[orderValue];
+        });
+
+        if (null !== languageValue) {
+            doctors = doctors.filter((doctor) => {
+                if (Array.isArray(doctor.language)) {
+                    return doctor.language.includes(languageValue)
+                }
+
+                return doctor.language == languageValue;
+            })
+        }
+        console.log(doctors);
+        // dispatch(updateList(doctors));
     }
 
     const clearLanguage = () => {
         setLanguage({ value: null, text: 'Ngôn ngữ' });
+        setTimeout(() => {
+            doctorFilter(order.value, null);
+        }, 500);
     }
 
     const updateOrder = (value, text) => {
-        setOrder({ value, text }, () => {
-
-        })
+        setOrder({ value, text });
+        setTimeout(() => {
+            doctorFilter(value, language.value);
+        }, 500);
     }
 
     const updateLanguage = (value, text) => {
-        setLanguage({ value, text }, () => {
-
-        })
+        setLanguage({ value, text });
+        setTimeout(() => {
+            doctorFilter(order.value, value);
+        }, 500);
     }
 
     return (

@@ -7,6 +7,8 @@ export const doctorReducer = createSlice({
   },
   reducers: {
     updateList: (state, action) => {
+      console.log('state');
+      console.log(state);
       state.list = action.payload;
     },
   },
