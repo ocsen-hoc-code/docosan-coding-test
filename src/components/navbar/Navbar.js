@@ -7,17 +7,10 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const [order, setOrder] = useState({ value: 'distance', text: 'Khoảng cách' });
     const [language, setLanguage] = useState({ value: null, text: 'Ngôn ngữ' });
-   
+
     const doctorFilter = (orderValue, languageValue) => {
         let doctors = [...dataList];
         console.log(doctors);
-        doctors.sort((a, b) => {
-            if ('distance' == orderValue) {
-                return a[orderValue] - b[orderValue];
-            }
-            return b[orderValue] - a[orderValue];
-        });
-        
         if (null !== languageValue) {
             doctors = doctors.filter((doctor) => {
                 if (Array.isArray(doctor.language)) {
@@ -27,6 +20,14 @@ const Navbar = () => {
                 return doctor.language == languageValue;
             })
         }
+
+        doctors.sort((a, b) => {
+            if ('distance' == orderValue) {
+                return a[orderValue] - b[orderValue];
+            }
+            return b[orderValue] - a[orderValue];
+        });
+
         console.log(doctors);
         dispatch(setDoctors(doctors));
     }
